@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: paw-pad-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://paw_pad_user:paw_pad_password@postgres:5432/paw_pad
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports:
+      - "3002:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: paw-pad-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paw_pad
+      POSTGRES_USER: paw_pad_user
+      POSTGRES_PASSWORD: paw_pad_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - paw_pad_postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paw_pad_user -d paw_pad"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  paw_pad_postgres_data:

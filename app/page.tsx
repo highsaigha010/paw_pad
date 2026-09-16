@@ -1,69 +1,114 @@
-import Image from "next/image";
+import Sidebar from "./components/layout/Sidebar";
+import DashboardHeader from "@/app/components/layout/DashboardHeader";
+import { AlertCircle, CalendarCheck, Clock, DollarSign, PawPrint, Scissors } from "lucide-react";
+
+const stats = [
+    { label: "Appointments", value: "18", detail: "4 done", icon: CalendarCheck },
+    { label: "In Care", value: "7", detail: "3 grooming", icon: PawPrint },
+    { label: "Due Pickup", value: "4", detail: "today", icon: Clock },
+    { label: "Revenue", value: "$1.2k", detail: "+12%", icon: DollarSign },
+];
+
+const queue = [
+    { label: "Intake", count: "2" },
+    { label: "Bathing", count: "3" },
+    { label: "Styling", count: "2" },
+    { label: "Ready", count: "4" },
+];
+
+const services = [
+    { name: "Full Groom", value: "8", icon: Scissors },
+    { name: "Bath & Brush", value: "6", icon: PawPrint },
+    { name: "Nail Trim", value: "4", icon: Scissors },
+];
+
+const alerts = [
+    "Bella pickup overdue",
+    "Two pending deposits",
+    "Low shampoo inventory",
+];
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+        <main className="dashboardLayout">
+            <Sidebar activeItem="Dashboard" />
+
+            <section className="dashboardContent">
+                <DashboardHeader />
+
+                <section className="statsGrid compactStats" aria-label="Dashboard summary">
+                    {stats.map((stat) => {
+                        const Icon = stat.icon;
+
+                        return (
+                            <article className="statCard" key={stat.label}>
+                                <div className="statCardTop">
+                                    <p>{stat.label}</p>
+                                    <Icon size={17} />
+                                </div>
+                                <strong>{stat.value}</strong>
+                                <span>{stat.detail}</span>
+                            </article>
+                        );
+                    })}
+                </section>
+
+                <div className="dashboardOverview">
+                    <article className="panel operationsPanel">
+                        <div className="panelHeader compact">
+                            <div>
+                                <p>Live Flow</p>
+                                <h3>Service Pipeline</h3>
+                            </div>
+                        </div>
+                        <div className="pipeline">
+                            {queue.map((item) => (
+                                <div key={item.label}>
+                                    <strong>{item.count}</strong>
+                                    <span>{item.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
+
+                    <article className="panel servicesPanel">
+                        <div className="panelHeader compact">
+                            <div>
+                                <p>Demand</p>
+                                <h3>Service Mix</h3>
+                            </div>
+                        </div>
+                        {services.map((service) => {
+                            const Icon = service.icon;
+
+                            return (
+                                <div className="serviceItem" key={service.name}>
+                                    <div>
+                                        <Icon size={17} />
+                                        <span>{service.name}</span>
+                                    </div>
+                                    <strong>{service.value}</strong>
+                                </div>
+                            );
+                        })}
+                    </article>
+
+                    <article className="panel alertsPanel">
+                        <div className="panelHeader compact">
+                            <div>
+                                <p>Attention</p>
+                                <h3>Needs Action</h3>
+                            </div>
+                            <AlertCircle size={18} />
+                        </div>
+                        {alerts.map((alert) => (
+                            <div className="alertItem" key={alert}>
+                                {alert}
+                            </div>
+                        ))}
+                    </article>
+                </div>
+            </section>
+        </main>
+    );
 }
